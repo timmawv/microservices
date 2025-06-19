@@ -7,7 +7,6 @@ import lombok.*;
 @Table(name = "customer")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Customer extends BaseEntity {
@@ -18,6 +17,6 @@ public class Customer extends BaseEntity {
     private Long customerId;
     private String name;
     private String email;
-    @Column(name = "mobile_number")
+    @Column(name = "mobile_number", unique = true)
     private String mobileNumber;
 }

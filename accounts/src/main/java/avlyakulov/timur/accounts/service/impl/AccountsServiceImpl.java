@@ -1,10 +1,12 @@
 package avlyakulov.timur.accounts.service.impl;
 
+import avlyakulov.timur.accounts.dto.AccountsDto;
 import avlyakulov.timur.accounts.dto.CustomerDto;
 import avlyakulov.timur.accounts.entity.Accounts;
 import avlyakulov.timur.accounts.entity.Customer;
 import avlyakulov.timur.accounts.exception.CustomerAlreadyExistsException;
 import avlyakulov.timur.accounts.exception.ResourceNotFoundException;
+import avlyakulov.timur.accounts.mapper.AccountsMapper;
 import avlyakulov.timur.accounts.mapper.CustomerMapper;
 import avlyakulov.timur.accounts.repository.AccountsRepository;
 import avlyakulov.timur.accounts.repository.CustomerRepository;
@@ -29,24 +31,58 @@ public class AccountsServiceImpl implements AccountServiceI {
     @Override
     public void createAccount(CustomerDto customerDto) {
         Customer customer = customerMapper.mapToEntity(customerDto);
-        customerRepository.findByMobileNumber(customer.getMobileNumber())
+        customerRepository.findByMobileNumberAndIsDeletedIsFalse(customer.getMobileNumber())
                 .ifPresent(existingCustomer -> {
                     throw new CustomerAlreadyExistsException("Customer already registered with given mobile number "
                             + customer.getMobileNumber());
                 });
         customer.setCreatedAt(LocalDateTime.now());
         customer.setCreatedBy("Anonymous");
+        customer.setIsDeleted(false);
         Customer savedCustomer = customerRepository.save(customer);
         accountsRepository.save(createNewAccounts(savedCustomer));
     }
 
     @Override
     public CustomerDto getAccountByMobileNumber(String mobileNumber) {
-        Customer customer = customerRepository.findByMobileNumber(mobileNumber)
+        Customer customer = customerRepository.findByMobileNumberAndIsDeletedIsFalse(mobileNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
         Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString()));
         return customerMapper.mapToDto(customer, accounts);
+    }
+
+    @Override
+    public boolean updateAccount(CustomerDto customerDto) {
+        boolean isUpdated = false;
+        AccountsDto accountsDto = customerDto.getAccountsDto();
+        if (accountsDto != null) {
+            Accounts accounts = accountsRepository.findById(accountsDto.getAccountNumber())
+                    .orElseThrow(() -> new ResourceNotFoundException("Account", "AccountNumber", accountsDto.getAccountNumber().toString()));
+            updateAccount(accounts, accountsDto);
+            accounts = accountsRepository.save(accounts);
+
+            Long customerId = accounts.getCustomerId();
+            Customer customer = customerRepository.findById(customerId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer", "CustomerId", customerId.toString()));
+            updateCustomer(customer, customerDto);
+            customerRepository.save(customer);
+            isUpdated = true;
+        }
+        return isUpdated;
+    }
+
+    @Override
+    public boolean deleteAccount(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumberAndIsDeletedIsFalse(mobileNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
+        Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId())
+                .orElseThrow(() -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString()));
+        customer.setIsDeleted(true);
+        accounts.setIsDeleted(true);
+        customerRepository.save(customer);
+        accountsRepository.save(accounts);
+        return true;
     }
 
     private Accounts createNewAccounts(Customer customer) {
@@ -60,5 +96,16 @@ public class AccountsServiceImpl implements AccountServiceI {
         newAccount.setCreatedAt(LocalDateTime.now());
         newAccount.setCreatedBy("Anonymous");
         return newAccount;
+    }
+
+    private void updateAccount(Accounts accounts, AccountsDto accountsDto) {
+        accounts.setAccountType(accountsDto.getAccountType());
+        accounts.setBranchAddress(accountsDto.getBranchAddress());
+    }
+
+    private void updateCustomer(Customer customer, CustomerDto customerDto) {
+        customer.setName(customerDto.getName());
+        customer.setEmail(customerDto.getEmail());
+        customer.setMobileNumber(customer.getMobileNumber());
     }
 }

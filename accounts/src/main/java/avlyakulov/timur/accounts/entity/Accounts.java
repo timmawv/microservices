@@ -21,4 +21,6 @@ public class Accounts extends BaseEntity {
     private String branchAddress;
     @Column(name = "customer_id")
     private Long customerId;
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
 }

@@ -4,6 +4,7 @@ import avlyakulov.timur.accounts.dto.CustomerDto;
 import avlyakulov.timur.accounts.entity.Accounts;
 import avlyakulov.timur.accounts.entity.Customer;
 import avlyakulov.timur.accounts.exception.CustomerAlreadyExistsException;
+import avlyakulov.timur.accounts.exception.ResourceNotFoundException;
 import avlyakulov.timur.accounts.mapper.CustomerMapper;
 import avlyakulov.timur.accounts.repository.AccountsRepository;
 import avlyakulov.timur.accounts.repository.CustomerRepository;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -35,7 +37,16 @@ public class AccountsServiceImpl implements AccountServiceI {
         customer.setCreatedAt(LocalDateTime.now());
         customer.setCreatedBy("Anonymous");
         Customer savedCustomer = customerRepository.save(customer);
-        //accountsRepository.save(createNewAccounts(savedCustomer));
+        accountsRepository.save(createNewAccounts(savedCustomer));
+    }
+
+    @Override
+    public CustomerDto getAccountByMobileNumber(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
+        Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId())
+                .orElseThrow(() -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString()));
+        return customerMapper.mapToDto(customer, accounts);
     }
 
     private Accounts createNewAccounts(Customer customer) {

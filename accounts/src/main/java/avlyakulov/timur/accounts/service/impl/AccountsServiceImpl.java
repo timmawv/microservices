@@ -14,6 +14,7 @@ import avlyakulov.timur.accounts.service.AccountServiceI;
 import avlyakulov.timur.accounts.util.AccountsConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -29,6 +30,7 @@ public class AccountsServiceImpl implements AccountServiceI {
 
 
     @Override
+    @Transactional
     public void createAccount(CustomerDto customerDto) {
         Customer customer = customerMapper.mapToEntity(customerDto);
         customerRepository.findByMobileNumberAndIsDeletedIsFalse(customer.getMobileNumber())
@@ -36,8 +38,6 @@ public class AccountsServiceImpl implements AccountServiceI {
                     throw new CustomerAlreadyExistsException("Customer already registered with given mobile number "
                             + customer.getMobileNumber());
                 });
-        customer.setCreatedAt(LocalDateTime.now());
-        customer.setCreatedBy("Anonymous");
         customer.setIsDeleted(false);
         Customer savedCustomer = customerRepository.save(customer);
         accountsRepository.save(createNewAccounts(savedCustomer));
@@ -53,6 +53,7 @@ public class AccountsServiceImpl implements AccountServiceI {
     }
 
     @Override
+    @Transactional
     public boolean updateAccount(CustomerDto customerDto) {
         boolean isUpdated = false;
         AccountsDto accountsDto = customerDto.getAccountsDto();
@@ -73,6 +74,7 @@ public class AccountsServiceImpl implements AccountServiceI {
     }
 
     @Override
+    @Transactional
     public boolean deleteAccount(String mobileNumber) {
         Customer customer = customerRepository.findByMobileNumberAndIsDeletedIsFalse(mobileNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
@@ -80,8 +82,6 @@ public class AccountsServiceImpl implements AccountServiceI {
                 .orElseThrow(() -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString()));
         customer.setIsDeleted(true);
         accounts.setIsDeleted(true);
-        customerRepository.save(customer);
-        accountsRepository.save(accounts);
         return true;
     }
 

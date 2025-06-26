@@ -4,6 +4,8 @@ import avlyakulov.timur.accounts.dto.CustomerDto;
 import avlyakulov.timur.accounts.dto.ResponseDto;
 import avlyakulov.timur.accounts.service.AccountServiceI;
 import avlyakulov.timur.accounts.util.AccountsConstants;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +20,7 @@ public class AccountsController {
     private AccountServiceI accountServiceI;
 
     @PostMapping("/customer")
-    public ResponseEntity<ResponseDto> createAccount(@RequestBody CustomerDto customerDto) {
+    public ResponseEntity<ResponseDto> createAccount(@RequestBody @Valid CustomerDto customerDto) {
         accountServiceI.createAccount(customerDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -26,13 +28,15 @@ public class AccountsController {
     }
 
     @GetMapping("/customer")
-    public ResponseEntity<CustomerDto> findCustomerByMobileNumber(@RequestParam String mobileNumber) {
+    public ResponseEntity<CustomerDto> findCustomerByMobileNumber(@RequestParam
+                                                                  @Pattern(regexp = "(^$|[0-9]{4})", message = "Mobile number must be 4 digits")
+                                                                  String mobileNumber) {
         CustomerDto customerDto = accountServiceI.getAccountByMobileNumber(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK).body(customerDto);
     }
 
     @PutMapping("/customer")
-    public ResponseEntity<ResponseDto> updateAccountDetails(@RequestBody CustomerDto customerDto) {
+    public ResponseEntity<ResponseDto> updateAccountDetails(@RequestBody @Valid CustomerDto customerDto) {
         boolean isUpdated = accountServiceI.updateAccount(customerDto);
         if (isUpdated) {
             return ResponseEntity
@@ -46,7 +50,9 @@ public class AccountsController {
     }
 
     @DeleteMapping("/customer")
-    public ResponseEntity<ResponseDto> deleteAccountDetails(@RequestParam String mobileNumber) {
+    public ResponseEntity<ResponseDto> deleteAccountDetails(@RequestParam
+                                                            @Pattern(regexp = "(^$|[0-9]{4})", message = "Mobile number must be 4 digits")
+                                                            String mobileNumber) {
         boolean isDeleted = accountServiceI.deleteAccount(mobileNumber);
         if (isDeleted) {
             return ResponseEntity

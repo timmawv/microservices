@@ -4,6 +4,10 @@ import avlyakulov.timur.accounts.dto.CustomerDto;
 import avlyakulov.timur.accounts.dto.ResponseDto;
 import avlyakulov.timur.accounts.service.AccountServiceI;
 import avlyakulov.timur.accounts.util.AccountsConstants;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -12,6 +16,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(
+        name = "CRUD REST APIs for Accounts in EasyBank",
+        description = "CRUD operations, POST, GET, PUT, DELETE"
+)
 @RestController
 @RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
 @AllArgsConstructor
@@ -19,6 +27,14 @@ public class AccountsController {
 
     private AccountServiceI accountServiceI;
 
+    @Operation(
+            summary = "Create Account REST API",
+            description = "REST API to create a new Customer & Account inside EasyBank"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "HTTP Status CREATED"
+    )
     @PostMapping("/customer")
     public ResponseEntity<ResponseDto> createAccount(@RequestBody @Valid CustomerDto customerDto) {
         accountServiceI.createAccount(customerDto);
@@ -27,6 +43,14 @@ public class AccountsController {
                 .body(new ResponseDto(AccountsConstants.STATUS_201, AccountsConstants.MESSAGE_201));
     }
 
+    @Operation(
+            summary = "Get Account REST API",
+            description = "REST API to get a Customer & Account based on a mobile number"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status OK"
+    )
     @GetMapping("/customer")
     public ResponseEntity<CustomerDto> findCustomerByMobileNumber(@RequestParam
                                                                   @Pattern(regexp = "(^$|[0-9]{4})", message = "Mobile number must be 4 digits")
@@ -35,6 +59,21 @@ public class AccountsController {
         return ResponseEntity.status(HttpStatus.OK).body(customerDto);
     }
 
+    @Operation(
+            summary = "Update Account Details REST API",
+            description = "REST API to update Customer & Account based on a mobile number"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error"
+            )
+    }
+    )
     @PutMapping("/customer")
     public ResponseEntity<ResponseDto> updateAccountDetails(@RequestBody @Valid CustomerDto customerDto) {
         boolean isUpdated = accountServiceI.updateAccount(customerDto);
@@ -49,6 +88,21 @@ public class AccountsController {
         }
     }
 
+    @Operation(
+            summary = "Delete Account Details REST API",
+            description = "REST API to delete Customer & Account based on a mobile number"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error"
+            )
+    }
+    )
     @DeleteMapping("/customer")
     public ResponseEntity<ResponseDto> deleteAccountDetails(@RequestParam
                                                             @Pattern(regexp = "(^$|[0-9]{4})", message = "Mobile number must be 4 digits")

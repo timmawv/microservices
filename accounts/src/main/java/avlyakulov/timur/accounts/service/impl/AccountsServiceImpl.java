@@ -12,14 +12,21 @@ import avlyakulov.timur.accounts.repository.AccountsRepository;
 import avlyakulov.timur.accounts.repository.CustomerRepository;
 import avlyakulov.timur.accounts.service.AccountServiceI;
 import avlyakulov.timur.accounts.util.AccountsConstants;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AccountsServiceImpl implements AccountServiceI {
@@ -27,11 +34,13 @@ public class AccountsServiceImpl implements AccountServiceI {
     private AccountsRepository accountsRepository;
     private CustomerRepository customerRepository;
     private CustomerMapper customerMapper;
-
+    @Setter(onMethod_ = @__({@Autowired}))
+    private Validator validator;
 
     @Override
     @Transactional
     public void createAccount(CustomerDto customerDto) {
+        validateCustomerDtoInDifferentWay(customerDto);
         Customer customer = customerMapper.mapToEntity(customerDto);
         customerRepository.findByMobileNumberAndIsDeletedIsFalse(customer.getMobileNumber())
                 .ifPresent(existingCustomer -> {
@@ -107,5 +116,16 @@ public class AccountsServiceImpl implements AccountServiceI {
         customer.setName(customerDto.getName());
         customer.setEmail(customerDto.getEmail());
         customer.setMobileNumber(customer.getMobileNumber());
+    }
+
+    private void validateCustomerDtoInDifferentWay(CustomerDto customerDto) {
+        var violations = validator.validate(customerDto);
+        if (violations.isEmpty()) {
+            log.info("No errors");
+        } else {
+            log.info("Error is here: ");
+            System.out.println(violations);
+            throw new RuntimeException();
+        }
     }
 }

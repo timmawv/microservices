@@ -1,10 +1,14 @@
 package avlyakulov.timur.accounts.controller;
 
 import avlyakulov.timur.accounts.dto.CustomerDto;
+import avlyakulov.timur.accounts.dto.ErrorResponseDto;
 import avlyakulov.timur.accounts.dto.ResponseDto;
 import avlyakulov.timur.accounts.service.AccountServiceI;
 import avlyakulov.timur.accounts.util.AccountsConstants;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(
-        name = "CRUD REST APIs for Accounts in EasyBank",
+        name = "CRUD REST APIs for Accounts in Bank",
         description = "CRUD operations, POST, GET, PUT, DELETE"
 )
 @RestController
@@ -29,7 +33,7 @@ public class AccountsController {
 
     @Operation(
             summary = "Create Account REST API",
-            description = "REST API to create a new Customer & Account inside EasyBank"
+            description = "REST API to create a new Customer & Account inside Bank"
     )
     @ApiResponse(
             responseCode = "201",
@@ -70,7 +74,10 @@ public class AccountsController {
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "HTTP Status Internal Server Error"
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
             )
     }
     )

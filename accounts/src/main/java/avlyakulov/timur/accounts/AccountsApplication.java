@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @OpenAPIDefinition(
 		info = @Info(
 				title = "Accounts microservice REST API Documentation",
-				description = "Easy Bank Accounts microservice",
+				description = "Bank Accounts microservice",
 				version = "v1",
 				contact = @Contact(
 						name = "Tymur Avliakulov",
@@ -27,7 +27,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 				)
 		),
 		externalDocs = @ExternalDocumentation(
-				description = "Easy Bank Accounts microservice REST API Documentation",
+				description = "Bank Accounts microservice REST API Documentation",
 				url = "https://github.com/timmawv"
 		)
 )//это просто описание нашего сервиса в swagger

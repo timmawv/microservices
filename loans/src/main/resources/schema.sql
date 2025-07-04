@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS `loans` (
   `created_by` varchar(20) NOT NULL,
   `updated_at` date DEFAULT NULL,
   `updated_by` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`loan_id`)
+   PRIMARY KEY (`loan_id`)
 );

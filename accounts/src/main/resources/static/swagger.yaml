@@ -1,0 +1,151 @@
+openapi: 3.0.0
+info:
+  title: CRUD REST APIs for Accounts in Bank
+  description: CRUD operations, POST, GET, PUT, DELETE
+  version: v1
+  contact:
+    name: Tymur Avliakulov
+    email: timur@gmail.com
+    url: https://github.com/timmawv
+  license:
+    name: Apache 2.0
+    url: https://github.com/timmawv
+externalDocs:
+  description: Bank Accounts microservice REST API Documentation
+  url: https://github.com/timmawv
+servers:
+  - url: http://localhost:8080
+    description: Dev server
+paths:
+  /api/customer:
+    post:
+      summary: Create Account REST API
+      description: REST API to create a new Customer & Account inside Bank
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerDto'
+
+
+      responses:
+        '201':
+          description: HTTP Status CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+
+components:
+  schemas:
+    AccountsDto:
+      name: Accounts
+      description: Schema to hold Account information
+      type: object
+      required:
+        - accountNumber
+        - accountType
+        - branchAddress
+      properties:
+        accountNumber:
+          nullable: false
+          required: true
+          type: integer
+        accountType:
+          nullable: false
+          required: true
+          minLength: 1
+          type: string
+          example: Savings
+        branchAddress:
+          nullable: false
+          required: true
+          minLength: 1
+          type: string
+          example: 123 New York
+    CustomerDto:
+      type: object
+      name: Customer
+      description: Schema to hold Customer and Account information
+      required:
+        - name
+        - email
+        - mobileNumber
+        - accountsDto
+      properties:
+        name:
+          nullable: false
+          required: true
+          minLength: 5
+          maxLength: 30
+          type: string
+          example: Dima
+        email:
+          nullable: false
+          required: true
+          minLength: 1
+          type: string
+          example: dima@gmail.com
+        mobileNumber:
+          pattern: (^$|[0-9]{10})
+          type: string
+          example: 4433
+        accountsDto:
+          $ref: "#/components/schemas/AccountsDto"
+    ErrorResponse:
+      type: object
+      name: ErrorResponse
+      description: Schema to hold error response information
+      required:
+        - apiPath
+        - errorCode
+        - errorMessage
+        - errorTime
+      properties:
+        apiPath:
+          type: string
+          description: API path invoked by client
+        errorCode:
+          type: string
+          description: Error code representing the error happened
+          example: 201 CREATED
+        errorMessage:
+          type: string
+          description: Error message representing the error happened
+        errorTime:
+          type: string
+          description: Error message when the error happened
+    Response:
+      type: object
+      name: Response
+      description: Schema to hold successful response information
+      required:
+        - statusCode
+        - statusMsg
+      properties:
+        statusCode:
+          type: string
+          description: Status code in the response
+          example: 200
+        statusMsg:
+          type: string
+          description: Status message in the response
+          example: Request processed successfully
+    AccountsContactInfoDto:
+      name: AccountsContactInfo
+      description: Info about owner
+      type: object
+      required:
+        - message
+        - contactDetails
+        - onCallSupport
+      properties:
+        message:
+          type: string
+        contactDetails:
+          type: object
+        onCallSupport:
+          type: array
+

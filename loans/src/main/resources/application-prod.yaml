@@ -1,8 +1,8 @@
 build:
   version: "1.0"
 
-accounts:
-  message: "Welcome to Bank Accounts related to prod APIs"
+loans:
+  message: "Welcome to Bank Loans related to prod APIs"
   contactDetails:
     name: "Evgen Sidorov - Product Owner"
     email: "evgen@gmail.com"

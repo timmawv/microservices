@@ -1,8 +1,8 @@
 build:
   version: "2.0"
 
-accounts:
-  message: "Welcome to Bank Accounts related to QA APIs"
+cards:
+  message: "Welcome to Bank Cards related to QA APIs"
   contactDetails:
     name: "Taras Petrov - QA Lead"
     email: "taras@gmail.com"

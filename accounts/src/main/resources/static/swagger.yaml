@@ -27,8 +27,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CustomerDto'
-
-
       responses:
         '201':
           description: HTTP Status CREATED
@@ -36,6 +34,101 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Response'
+    get:
+      summary: Get Account REST API
+      description: REST API to get a Customer & Account based on a mobile number
+      parameters:
+        - name: mobileNumber
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: (^$|[0-9]{4})
+      responses:
+        '200':
+          description: HTTP Status OK
+    put:
+      summary: Update Account Details REST API
+      description: REST API to update Customer & Account based on a mobile number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerDto'
+      responses:
+        '200':
+          description: HTTP Status OK
+        '417':
+          description: Expectation failed
+        '500':
+          description: Http Status Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete Account Details REST API
+      description: REST API to delete Customer & Account based on a mobile number
+      parameters:
+        - name: mobileNumber
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: (^$|[0-9]{4})
+      responses:
+        '200':
+          description: HTTP Status OK
+        '500':
+          description: Http Status Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/build-info:
+    get:
+      summary: Get Build information
+      description: Get Build information that is deployed into accounts microservice
+      responses:
+        '200':
+          description: HTTP Status OK
+        '500':
+          description: Http Status Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/java-version:
+    get:
+      summary: Get Java version
+      description: Get Java version that uses into accounts microservice
+      responses:
+        '200':
+          description: HTTP Status OK
+        '500':
+          description: Http Status Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/contact-info:
+    get:
+      summary: Get Contact information
+      description: Get Contact information that uses into accounts microservice
+      responses:
+        '200':
+          description: HTTP Status OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountsContactInfoDto'
+        '500':
+          description: Http Status Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 
 components:
@@ -110,7 +203,6 @@ components:
         errorCode:
           type: string
           description: Error code representing the error happened
-          example: 201 CREATED
         errorMessage:
           type: string
           description: Error message representing the error happened
@@ -148,4 +240,3 @@ components:
           type: object
         onCallSupport:
           type: array
-

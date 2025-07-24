@@ -24,10 +24,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(
-        name = "CRUD REST APIs for Accounts in Bank",
-        description = "CRUD operations, POST, GET, PUT, DELETE"
-)
 @RestController
 @RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
@@ -42,15 +38,8 @@ public class AccountsController {
 
     private final AccountContactInfoDto accountContactInfoDto;
 
-    //todo remove all swagger to separate file and than check how does it work
-    @Operation(
-            summary = "Create Account REST API",
-            description = "REST API to create a new Customer & Account inside Bank"
-    )
-    @ApiResponse(
-            responseCode = "201",
-            description = "HTTP Status CREATED"
-    )
+
+
     @PostMapping("/customer")
     public ResponseEntity<ResponseDto> createAccount(@RequestBody @Valid CustomerDto customerDto) {
         accountServiceI.createAccount(customerDto);
@@ -59,14 +48,6 @@ public class AccountsController {
                 .body(new ResponseDto(AccountsConstants.STATUS_201, AccountsConstants.MESSAGE_201));
     }
 
-    @Operation(
-            summary = "Get Account REST API",
-            description = "REST API to get a Customer & Account based on a mobile number"
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "HTTP Status OK"
-    )
     @GetMapping("/customer")
     public ResponseEntity<CustomerDto> findCustomerByMobileNumber(@RequestParam
                                                                   @Pattern(regexp = "(^$|[0-9]{4})", message = "Mobile number must be 4 digits")
@@ -75,28 +56,6 @@ public class AccountsController {
         return ResponseEntity.status(HttpStatus.OK).body(customerDto);
     }
 
-    @Operation(
-            summary = "Update Account Details REST API",
-            description = "REST API to update Customer & Account based on a mobile number"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK"
-            ),
-            @ApiResponse(
-                responseCode = "417",
-                description = "Expectation failed"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponseDto.class)
-                    )
-            )
-    }
-    )
     @PutMapping("/customer")
     public ResponseEntity<ResponseDto> updateAccountDetails(@RequestBody @Valid CustomerDto customerDto) {
         boolean isUpdated = accountServiceI.updateAccount(customerDto);
@@ -111,24 +70,6 @@ public class AccountsController {
         }
     }
 
-    @Operation(
-            summary = "Delete Account Details REST API",
-            description = "REST API to delete Customer & Account based on a mobile number"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponseDto.class)
-                    )
-            )
-    }
-    )
     @DeleteMapping("/customer")
     public ResponseEntity<ResponseDto> deleteAccountDetails(@RequestParam
                                                             @Pattern(regexp = "(^$|[0-9]{4})", message = "Mobile number must be 4 digits")
@@ -145,67 +86,16 @@ public class AccountsController {
         }
     }
 
-    @Operation(
-            summary = "Get Build information",
-            description = "Get Build information that is deployed into accounts microservice"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponseDto.class)
-                    )
-            )
-    })
     @GetMapping("/build-info")
     public ResponseEntity<String> getBuildInfo() {
         return ResponseEntity.ok(buildVersion);
     }
 
-    @Operation(
-            summary = "Get Java version",
-            description = "Get Java version that uses into accounts microservice"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponseDto.class)
-                    )
-            )
-    })
     @GetMapping("/java-version")
     public ResponseEntity<String> getJavaVersion() {
         return ResponseEntity.ok(environment.getProperty("JAVA_HOME"));
     }
 
-    @Operation(
-            summary = "Get Contact information",
-            description = "Get Contact information that uses into accounts microservice"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponseDto.class)
-                    )
-            )
-    })
     @GetMapping("/contact-info")
     public ResponseEntity<AccountContactInfoDto> getContactInfo() {
         return ResponseEntity.ok(accountContactInfoDto);

@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: "cards"
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
@@ -12,15 +14,5 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-
-build:
-  version: "3.0"
-
-cards:
-  message: "Welcome to Bank Cards related to local APIs"
-  contactDetails:
-    name: "Timur Avliakulov - Java Developer"
-    email: "timur@gmail.com"
-  onCallSupport:
-    - (123) 555-1234
-    - (123) 432-6545
+  config:
+    import: "optional:configserver:http://localhost:8071/" #если нет доступа то мы все равно включим микросервис

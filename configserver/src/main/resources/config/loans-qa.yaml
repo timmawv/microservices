@@ -1,0 +1,11 @@
+build:
+  version: "2.0"
+
+loans:
+  message: "Welcome to Bank Loans related to QA APIs"
+  contactDetails:
+    name: "Taras Petrov - QA Lead"
+    email: "taras@gmail.com"
+  onCallSupport:
+    - (123) 555-0987
+    - (123) 335-7433

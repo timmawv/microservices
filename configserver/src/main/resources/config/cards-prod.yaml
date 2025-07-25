@@ -1,0 +1,11 @@
+build:
+  version: "1.0"
+
+cards:
+  message: "Welcome to Bank Cards related to prod APIs"
+  contactDetails:
+    name: "Evgen Sidorov - Product Owner"
+    email: "evgen@gmail.com"
+  onCallSupport:
+    - (123) 555-1335
+    - (123) 567-6093

@@ -1,0 +1,11 @@
+build:
+  version: "3.0"
+
+accounts:
+  message: "Welcome to Bank Accounts related to local APIs"
+  contactDetails:
+    name: "Timur Avliakulov - Java Developer"
+    email: "timur@gmail.com"
+  onCallSupport:
+    - (123) 555-1234
+    - (123) 432-6545

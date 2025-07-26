@@ -17,9 +17,14 @@ spring:
   config:
     import: "optional:configserver:http://localhost:8071/" #если нет доступа то мы все равно включим микросервис
 
-
 management:
   endpoints:
     web:
       exposure:
         include: "*" #это значит чтоб все возможные энд поинты были доступны
+
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"

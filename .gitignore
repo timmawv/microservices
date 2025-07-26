@@ -6,6 +6,8 @@ target/
 
 accounts/src/main/resoucrces/info.txt
 
+encrypt_key.txt
+
 ### STS ###
 .apt_generated
 .classpath

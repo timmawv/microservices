@@ -17,3 +17,6 @@ spring:
           clone-on-start: true #чтоб скачать гит репо на старте
           force-pull: true
           search-paths: microservices
+
+encrypt:
+  key: ${ENCRYPT_KEY}

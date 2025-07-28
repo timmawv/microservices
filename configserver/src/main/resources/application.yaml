@@ -17,6 +17,17 @@ spring:
           clone-on-start: true #чтоб скачать гит репо на старте
           force-pull: true
           search-paths: microservices
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 encrypt:
   key: ${ENCRYPT_KEY}

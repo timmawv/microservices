@@ -2,19 +2,15 @@ spring:
   application:
     name: "configserver"
   profiles:
-  #    active: native
     active: git
   cloud:
     config:
       server:
-#        native:
-#          search-locations: "classpath:/config" #раньше тут сохраняли наши файлы в /resources
-#          search-locations: "file:/Users/timuravlakulov/Development/config" #способ считывать инфу которая где то в компьютере
         git:
           uri: "https://github.com/timmawv/timmawv-configs.git"
           default-label: main #название ветки
           timeout: 5
-          clone-on-start: true #чтоб скачать гит репо на старте
+          clone-on-start: true # чтоб скачать гит репо на старте
           force-pull: true
           search-paths: microservices
   rabbitmq:
@@ -37,7 +33,6 @@ management:
     health:
       probes:
         enabled: true
-
 
 encrypt:
   key: ${ENCRYPT_KEY}

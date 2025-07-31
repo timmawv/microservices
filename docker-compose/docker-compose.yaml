@@ -16,6 +16,22 @@ services:
       file: common-config.yaml
       service: network-deploy-service
 
+  mysql:
+    container_name: mysql-ms
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: accounts_db
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "--password=root" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
   configserver:
     image: timmawv/configserver
     container_name: configserver-ms

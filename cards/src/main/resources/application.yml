@@ -2,18 +2,20 @@ spring:
   application:
     name: "cards"
   datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: ''
-  h2:
-    console:
-      enabled: true
+    url: jdbc:mysql://localhost:3306/accounts_db
+    username: root
+    password: root
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  sql:
+    init:
+      mode: always #чтоб он сам запускал schema.sql
+
   config:
     import: "optional:configserver:http://localhost:8071/" #если нет доступа то мы все равно включим микросервис
 

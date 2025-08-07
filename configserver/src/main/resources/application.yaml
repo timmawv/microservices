@@ -34,5 +34,7 @@ management:
       probes:
         enabled: true
 
+
+
 encrypt:
   key: ${ENCRYPT_KEY}

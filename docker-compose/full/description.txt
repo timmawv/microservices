@@ -1,0 +1,1 @@
+Это полный файл с mysql database config server rabbit mq. Тут все есть для запуска

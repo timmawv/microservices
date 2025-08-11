@@ -30,15 +30,10 @@ import org.springframework.web.bind.annotation.*;
 public class AccountsController {
 
     private final AccountServiceI accountServiceI;
-
     @Value("${build.version}")
     private String buildVersion;
-
     private final Environment environment;
-
     private final AccountContactInfoDto accountContactInfoDto;
-
-
 
     @PostMapping("/customer")
     public ResponseEntity<ResponseDto> createAccount(@RequestBody @Valid CustomerDto customerDto) {
@@ -50,8 +45,7 @@ public class AccountsController {
 
     @GetMapping("/customer")
     public ResponseEntity<CustomerDto> findCustomerByMobileNumber(@RequestParam
-                                                                  @Pattern(regexp = "(^$|[0-9]{4})", message = "Mobile number must be 4 digits")
-                                                                  String mobileNumber) {
+                                                                  @Pattern(regexp = "(^$|[0-9]{4})", message = "Mobile number must be 4 digits") String mobileNumber) {
         CustomerDto customerDto = accountServiceI.getAccountByMobileNumber(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK).body(customerDto);
     }

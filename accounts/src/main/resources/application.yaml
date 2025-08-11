@@ -1,3 +1,10 @@
+sys-opt:
+  api:
+    cards:
+      url: http://localhost:9000
+    loans:
+      url: http://localhost:8090
+
 spring:
   application:
     name: "accounts"

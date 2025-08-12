@@ -1,5 +1,6 @@
 package avlyakulov.timur.accounts.mapper;
 
+import avlyakulov.timur.accounts.dto.CustomerDetailsDto;
 import avlyakulov.timur.accounts.dto.CustomerDto;
 import avlyakulov.timur.accounts.entity.Accounts;
 import avlyakulov.timur.accounts.entity.Customer;
@@ -15,4 +16,6 @@ public interface CustomerMapper {
     CustomerDto mapToDto(Customer customer, Accounts accounts);
 
     Customer mapToEntity(CustomerDto customerDto);
+
+    CustomerDetailsDto mapToCustomerDetailsDto(Customer customer);
 }

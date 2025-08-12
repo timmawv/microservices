@@ -66,7 +66,7 @@ public class CardsController {
     )
     @PostMapping("/card")
     public ResponseEntity<ResponseDto> createCard(@Valid @RequestParam
-                                                      @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+                                                      @Pattern(regexp="(^$|[0-9]{4})",message = "Mobile number must be 4 digits")
                                                       String mobileNumber) {
         iCardsService.createCard(mobileNumber);
             return ResponseEntity
@@ -93,7 +93,7 @@ public class CardsController {
     })
     @GetMapping("/card")
     public ResponseEntity<CardsDto> findCardsByMobileNumber(@RequestParam
-                                                     @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits") String mobileNumber) {
+                                                     @Pattern(regexp = "(^$|[0-9]{4})", message = "Mobile number must be 4 digits") String mobileNumber) {
         CardsDto cardsDto = iCardsService.fetchCard(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK).body(cardsDto);
     }

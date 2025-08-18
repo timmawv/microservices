@@ -1,9 +1,9 @@
 sys-opt:
   api:
     cards:
-      url: http://localhost:9000
+      url: http://localhost:9000 # не используется все контролит эврика
     loans:
-      url: http://localhost:8090
+      url: http://localhost:8090 # не используется все контролит эврика
 
 spring:
   application:

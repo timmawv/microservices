@@ -35,6 +35,5 @@ management:
         enabled: true
 
 
-
 encrypt:
   key: ${ENCRYPT_KEY}

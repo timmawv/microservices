@@ -6,8 +6,6 @@ services:
   microservice-base-config:
     extends:
       service: network-deploy-service
-    environment:
-      SPRING_RABBITMQ_HOST: "rabbit"
     deploy:
       resources:
         limits:
@@ -19,3 +17,9 @@ services:
     environment:
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8080/
       SPRING_PROFILES_ACTIVE: prod
+
+  microservice-eureka-config:
+    extends:
+      service: microservice-configserver-config
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8080/eureka/

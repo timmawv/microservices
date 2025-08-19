@@ -1,48 +1,9 @@
 services:
-  rabbit:
-    container_name: rabbitmq-ms
-    image: rabbitmq:4-management
-    hostname: rabbitmq # это специфично только для rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    healthcheck:
-      test: rabbitmq-diagnostics check_port_connectivity
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 5s
-    extends:
-      file: common-config.yaml
-      service: network-deploy-service
-
-  mysql:
-    container_name: mysql-ms
-    image: mysql:8
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: accounts_db
-      MYSQL_ROOT_USER: root
-      MYSQL_ROOT_PASSWORD: root
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    extends:
-      file: common-config.yaml
-      service: network-deploy-service
-
-
   configserver:
     image: timmawv/configserver
     container_name: configserver-ms
     ports:
       - "8071:8080"
-    depends_on:
-      rabbit:
-        condition: service_healthy
     healthcheck:
       test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
@@ -53,6 +14,26 @@ services:
       file: common-config.yaml
       service: microservice-base-config
 
+  eurekaserver:
+    image: timmawv/eurekaserver
+    container_name: eurekaserver-ms
+    ports:
+      - "8070:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yaml
+      service: microservice-configserver-config
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "eurekaserver" #это делаем из за бага
+
   accounts:
     image: timmawv/accounts
     container_name: accounts-ms
@@ -60,15 +41,14 @@ services:
       - "8080:8080"
     environment:
       SPRING_APPLICATION_NAME: "accounts" #это делаем из за бага
-      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-ms:3306/accounts_db"
     depends_on:
-      mysql:
+      eurekaserver:
         condition: service_healthy
       configserver:
         condition: service_healthy
     extends:
       file: common-config.yaml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
 
   loans:
     image: timmawv/loans
@@ -77,15 +57,14 @@ services:
       - "8090:8080"
     environment:
       SPRING_APPLICATION_NAME: "loans" #это делаем из за бага
-      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-ms:3306/accounts_db"
     depends_on:
-      mysql:
+      eurekaserver:
         condition: service_healthy
       configserver:
         condition: service_healthy
     extends:
       file: common-config.yaml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
 
   cards:
     image: timmawv/cards
@@ -94,15 +73,14 @@ services:
       - "9000:8080"
     environment:
       SPRING_APPLICATION_NAME: "cards" #это делаем из за бага
-      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-ms:3306/accounts_db"
     depends_on:
-      mysql:
+      eurekaserver:
         condition: service_healthy
       configserver:
         condition: service_healthy
     extends:
       file: common-config.yaml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
 
 networks:
   bank:

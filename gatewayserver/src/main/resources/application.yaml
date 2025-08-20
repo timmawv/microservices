@@ -1,1 +1,31 @@
-spring.application.name=gatewayserver
+spring:
+  application:
+    name: "gatewayserver"
+  config:
+    import: "optional:configserver:http://localhost:8071/" #если нет доступа то мы все равно включим микросервис
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true # говорит чтоб подключилось с эврикой и смотрело какие микросервисы есть в registry
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" #это значит чтоб все возможные энд поинты были доступны
+  endpoint:
+    gateway:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "gatewayserver"
+    description: "Bank Gate Way Server Application"
+    version: "1.0"

@@ -9,6 +9,7 @@ spring:
         webflux:
           discovery:
             locator:
+              #Также если указать false, то в /gateway/routes мы не будем видеть дефолтные пути, если настроим свой роутинг
               enabled: true # говорит чтоб подключилось с эврикой и смотрело какие микросервисы есть в registry
               lower-case-service-id: true
 

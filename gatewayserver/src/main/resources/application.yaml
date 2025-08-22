@@ -30,3 +30,9 @@ info:
     name: "gatewayserver"
     description: "Bank Gate Way Server Application"
     version: "1.0"
+
+logging:
+  level:
+    avlyakulov:
+      timur:
+        gatewayserver: DEBUG

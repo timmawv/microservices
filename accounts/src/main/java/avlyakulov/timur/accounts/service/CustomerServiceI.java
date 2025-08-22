@@ -9,5 +9,5 @@ public interface CustomerServiceI {
      * @param mobileNumber - input mobile number
      * @return - returns account details based on a given mobileNumber
      */
-    CustomerDetailsDto getCustomerDetails(String mobileNumber);
+    CustomerDetailsDto getCustomerDetails(String mobileNumber, String traceId);
 }

@@ -28,15 +28,15 @@ public class CustomerServiceImpl implements CustomerServiceI {
     private final CustomerMapper customerMapper;
     private final AccountsMapper accountsMapper;
 
-    public CustomerDetailsDto getCustomerDetails(String mobileNumber) {
+    public CustomerDetailsDto getCustomerDetails(String mobileNumber, String traceId) {
         Customer customer = customerRepository.findByMobileNumberAndIsDeletedIsFalse(mobileNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
         Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString()));
         CustomerDetailsDto customerDetailsDto = customerMapper.mapToCustomerDetailsDto(customer);
         customerDetailsDto.setAccountsDto(accountsMapper.mapToDto(accounts));
-        ResponseEntity<LoansDto> loan = loansFeign.getLoan(mobileNumber);
-        ResponseEntity<CardsDto> card = cardsFeign.getCard(mobileNumber);
+        ResponseEntity<LoansDto> loan = loansFeign.getLoan(traceId, mobileNumber);
+        ResponseEntity<CardsDto> card = cardsFeign.getCard(traceId, mobileNumber);
         customerDetailsDto.setCardsDto(card.getBody());
         customerDetailsDto.setLoansDto(loan.getBody());
         return customerDetailsDto;

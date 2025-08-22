@@ -27,7 +27,7 @@ public class GatewayserverApplication {
 								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
 						.uri("lb://ACCOUNTS"))  //lb - load balancer
 				.route(path -> path
-						.path("/loans/accounts/**")
+						.path("/bank/loans/**")
 						.filters(filter -> filter.rewritePath("/bank/loans/(?<segment>.*)", "/${segment}")
 								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
 						.uri("lb://LOANS"))

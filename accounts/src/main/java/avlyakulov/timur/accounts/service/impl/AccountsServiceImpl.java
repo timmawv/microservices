@@ -119,6 +119,7 @@ public class AccountsServiceImpl implements AccountServiceI {
     }
 
     private void validateCustomerDtoInDifferentWay(CustomerDto customerDto) {
+        //todo clean it
         var violations = validator.validate(customerDto);
         if (violations.isEmpty()) {
             log.info("No errors");

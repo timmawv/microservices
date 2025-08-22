@@ -60,6 +60,12 @@ info:
     description: "Bank Accounts Application"
     version: "1.0"
 
+logging:
+  level:
+    avlyakulov:
+      timur:
+        accounts: DEBUG
+
 springdoc:
   swagger-ui:
     url: /swagger.yaml

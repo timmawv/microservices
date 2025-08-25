@@ -2,7 +2,7 @@ spring:
   application:
     name: "eurekaserver"
   config:
-    import: "optional:configserver:http://localhost:8071/" #если нет доступа то мы все равно включим микросервис
+    import: "optional:configserver:http://localhost:8071/" #optional - если нет доступа то мы все равно включим микросервис
 
 management:
   endpoints:

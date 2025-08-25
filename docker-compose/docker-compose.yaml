@@ -1,6 +1,6 @@
 services:
   configserver:
-    image: timmawv/configserver
+    image: timmawv/configserver:${POM_VERSION}
     container_name: configserver-ms
     ports:
       - "8071:8080"
@@ -14,8 +14,26 @@ services:
       file: common-config.yaml
       service: microservice-base-config
 
+  gatewayserver:
+    image: timmawv/gatewayserver:${POM_VERSION}
+    container_name: gatewayserver-ms
+    ports:
+      - "8072:8080"
+    environment:
+      SPRING_APPLICATION_NAME: "gatewayserver" #это делаем из за бага
+    depends_on:
+      accounts:
+        condition: service_healthy
+      loans:
+        condition: service_healthy
+      cards:
+        condition: service_healthy
+    extends:
+      file: common-config.yaml
+      service: microservice-eureka-config
+
   eurekaserver:
-    image: timmawv/eurekaserver
+    image: timmawv/eurekaserver:${POM_VERSION}
     container_name: eurekaserver-ms
     ports:
       - "8070:8080"
@@ -35,10 +53,16 @@ services:
       SPRING_APPLICATION_NAME: "eurekaserver" #это делаем из за бага
 
   accounts:
-    image: timmawv/accounts
+    image: timmawv/accounts:${POM_VERSION}
     container_name: accounts-ms
     ports:
       - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: "accounts" #это делаем из за бага
     depends_on:
@@ -51,10 +75,16 @@ services:
       service: microservice-eureka-config
 
   loans:
-    image: timmawv/loans
+    image: timmawv/loans:${POM_VERSION}
     container_name: loans-ms
     ports:
       - "8090:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: "loans" #это делаем из за бага
     depends_on:
@@ -67,10 +97,16 @@ services:
       service: microservice-eureka-config
 
   cards:
-    image: timmawv/cards
+    image: timmawv/cards:${POM_VERSION}
     container_name: cards-ms
     ports:
       - "9000:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: "cards" #это делаем из за бага
     depends_on:

@@ -12,7 +12,7 @@
 
 	<groupId>avlyakulov.timur</groupId>
 	<artifactId>eurekaserver</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.9</version>
 	<name>eurekaserver</name>
 	<description>Service Discovery agent for Bank microservices</description>
 
@@ -61,7 +61,7 @@
 				<version>3.4.6</version>
 				<configuration>
 					<to>
-						<image>docker.io/timmawv/${project.artifactId}</image>
+						<image>docker.io/timmawv/${project.artifactId}:${pom.version}</image>
 					</to>
 				</configuration>
 			</plugin>

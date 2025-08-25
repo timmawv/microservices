@@ -1,0 +1,21 @@
+#todo файл создан для исправления ошибки при запуске docker compose файла, что в eurekaserver миллион ошибок падает
+spring:
+  application:
+    name: "eurekaserver"
+  config:
+    import: "configserver:http://configserver:8080/" #optional - если нет доступа то мы все равно включим микросервис
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true

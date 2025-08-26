@@ -24,7 +24,8 @@ public class GatewayserverApplication {
 						.path("/bank/accounts/**")
 						//мы форвардим наш запрос по такому пути
 						.filters(filter -> filter.rewritePath("/bank/accounts/(?<segment>.*)", "/${segment}")
-								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
+								.circuitBreaker(config -> config.setName("accountsCircuitBreaker")))
 						.uri("lb://ACCOUNTS"))  //lb - load balancer
 				.route(path -> path
 						.path("/bank/loans/**")

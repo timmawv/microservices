@@ -1,4 +1,4 @@
-#todo файл создан для исправления ошибки при запуске docker compose файла, что в eurekaserver миллион ошибок падает
+#todo файл создан для исправления ошибки при запуске docker compose файла, что в eurekaserver много ошибок падает
 spring:
   application:
     name: "eurekaserver"

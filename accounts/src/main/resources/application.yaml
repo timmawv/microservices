@@ -26,6 +26,10 @@ spring:
 
   config:
     import: "optional:configserver:http://localhost:8071/" #если нет доступа то мы все равно включим микросервис
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
 
 management:
   endpoints:
@@ -73,6 +77,14 @@ logging:
     avlyakulov:
       timur:
         accounts: DEBUG
+
+resilience4j.circuitbreaker:
+  configs:
+    default: #название нашего circuit breaker котореое я указал в главном файле
+      sliding-window-size: 10 #сколько нужно обработать запросов чтоб принять решение о смене состояние с close -> open
+      permitted-number-of-calls-in-half-open-state: 2 #сколько запросов будет обрабатываться в half open state
+      failure-rate-threshold: 50 #процент если 50% запросов падают, то мы можем пойти в открытое состояние
+      wait-duration-in-open-state: 10000 #10 секунд ждет в open state чтоб потом перейти в half open state
 
 springdoc:
   swagger-ui:

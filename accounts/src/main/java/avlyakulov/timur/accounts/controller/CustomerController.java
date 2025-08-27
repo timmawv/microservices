@@ -21,8 +21,7 @@ public class CustomerController {
     @GetMapping("/customer-details")
     public ResponseEntity<CustomerDetailsDto> getCustomerDetails(
             @RequestHeader("bank-trace-id") String traceId,
-            @RequestParam @Valid
-            @Pattern(regexp = "(^$|[0-9]{4})", message = "Mobile number must be 4 digits") String mobileNumber) {
+            @RequestParam @Valid @Pattern(regexp = "(^$|[0-9]{4})", message = "Mobile number must be 4 digits") String mobileNumber) {
         log.debug("bank-trace-id found: {}", traceId);
         return ResponseEntity.ok(customerServiceI.getCustomerDetails(mobileNumber, traceId));
     }

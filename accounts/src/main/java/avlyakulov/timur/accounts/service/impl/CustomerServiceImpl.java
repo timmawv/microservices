@@ -35,10 +35,13 @@ public class CustomerServiceImpl implements CustomerServiceI {
                 .orElseThrow(() -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString()));
         CustomerDetailsDto customerDetailsDto = customerMapper.mapToCustomerDetailsDto(customer);
         customerDetailsDto.setAccountsDto(accountsMapper.mapToDto(accounts));
+
         ResponseEntity<LoansDto> loan = loansFeign.getLoan(traceId, mobileNumber);
         ResponseEntity<CardsDto> card = cardsFeign.getCard(traceId, mobileNumber);
-        customerDetailsDto.setCardsDto(card.getBody());
-        customerDetailsDto.setLoansDto(loan.getBody());
+
+        if (card != null) customerDetailsDto.setCardsDto(card.getBody());
+        if (loan != null) customerDetailsDto.setLoansDto(loan.getBody());
+
         return customerDetailsDto;
     }
 }

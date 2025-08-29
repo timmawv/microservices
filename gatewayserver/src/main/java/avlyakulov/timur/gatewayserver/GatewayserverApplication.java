@@ -5,7 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @SpringBootApplication
@@ -31,7 +33,14 @@ public class GatewayserverApplication {
 				.route(path -> path
 						.path("/bank/loans/**")
 						.filters(filter -> filter.rewritePath("/bank/loans/(?<segment>.*)", "/${segment}")
-								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
+								.retry(retryConfig -> retryConfig.setRetries(3) //сколько раз будет пытаться ретраить
+										.setMethods(HttpMethod.GET) //на каком http методе будет это вызываться
+										.setBackoff(Duration.ofMillis(100), Duration.ofMillis(1000), 2, true)))
+						//в это схеме 1 параметре - через сколько будет сделана первая попытка, то есть после 100 мс после неудачи
+						//2 параметр - максимальное время через которое будет вызываться ретрай попытка
+						//3 параметр - это реплика фактор, то есть умножение на предыдущие, 1 попытка через 100 мс, 2 попытка через 200мс, но самая последняя не больше 1000 мс
+						//4 параметр - основываться ли на предыдущем значении
 						.uri("lb://LOANS"))
 				.route(path -> path
 						.path("/bank/cards/**")

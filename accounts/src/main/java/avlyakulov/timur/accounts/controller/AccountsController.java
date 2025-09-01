@@ -6,6 +6,7 @@ import avlyakulov.timur.accounts.dto.ErrorResponseDto;
 import avlyakulov.timur.accounts.dto.ResponseDto;
 import avlyakulov.timur.accounts.service.AccountServiceI;
 import avlyakulov.timur.accounts.util.AccountsConstants;
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
@@ -80,9 +83,17 @@ public class AccountsController {
         }
     }
 
+    @Retry(name = "getBuildInfo", fallbackMethod = "getBuildInfoFallback")
     @GetMapping("/build-info")
     public ResponseEntity<String> getBuildInfo() {
-        return ResponseEntity.ok(buildVersion);
+        log.debug("getBuildInfo() method Invoked");
+        throw new NullPointerException();
+//        return ResponseEntity.ok(buildVersion);
+    }
+
+    public ResponseEntity<String> getBuildInfoFallback(Throwable throwable) {
+        log.debug("getBuildInfoFallback() method Invoked");
+        return ResponseEntity.ok("0.9");
     }
 
     @GetMapping("/java-version")

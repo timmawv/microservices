@@ -118,6 +118,15 @@ services:
       file: common-config.yaml
       service: microservice-eureka-config
 
+  redis:
+    container_name: redis-ms
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    extends:
+      file: common-config.yaml
+      service: network-deploy-service
+
 networks:
   bank:
     driver: "bridge"

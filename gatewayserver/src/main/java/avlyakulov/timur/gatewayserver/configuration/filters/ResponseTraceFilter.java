@@ -17,8 +17,10 @@ public class ResponseTraceFilter {
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
                 HttpHeaders requestHeaders = exchange.getRequest().getHeaders();
                 String traceId = FilterUtils.getTraceId(requestHeaders);
-                log.debug("Updated the trace id to the outbound headers: {}", traceId);
-                exchange.getResponse().getHeaders().add(FilterUtils.TRACE_ID, traceId);
+                if (!(exchange.getResponse().getHeaders().containsKey(FilterUtils.TRACE_ID))) {
+                    log.debug("Updated the trace id to the outbound headers: {}", traceId);
+                    exchange.getResponse().getHeaders().add(FilterUtils.TRACE_ID, traceId);
+                }
             }));
         };
     }

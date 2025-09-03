@@ -98,6 +98,14 @@ resilience4j.retry:
         retry-exceptions:
           - java.util.concurrent.TimeoutException
 
+resilience4j.ratelimiter:
+  configs:
+    default:
+      timeout-duration: 1000 # максимально ждать 1 секунду
+      limit-refresh-period: 5000 #каждые 5 секунд будет обновляться
+      limit-for-period: 1
+
+
 
 springdoc:
   swagger-ui:

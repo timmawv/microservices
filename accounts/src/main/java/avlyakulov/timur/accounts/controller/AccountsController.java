@@ -6,6 +6,7 @@ import avlyakulov.timur.accounts.dto.ErrorResponseDto;
 import avlyakulov.timur.accounts.dto.ResponseDto;
 import avlyakulov.timur.accounts.service.AccountServiceI;
 import avlyakulov.timur.accounts.util.AccountsConstants;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -99,9 +100,14 @@ public class AccountsController {
         return ResponseEntity.ok("0.9");
     }
 
+    @RateLimiter(name = "getJavaVersion", fallbackMethod = "getJavaVersionFallback")
     @GetMapping("/java-version")
     public ResponseEntity<String> getJavaVersion() {
         return ResponseEntity.ok(environment.getProperty("JAVA_HOME"));
+    }
+
+    public ResponseEntity<String> getJavaVersionFallback(Throwable throwable) {
+        return ResponseEntity.ok("Java 17");
     }
 
     @GetMapping("/contact-info")

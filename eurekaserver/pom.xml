@@ -12,7 +12,7 @@
 
 	<groupId>avlyakulov.timur</groupId>
 	<artifactId>eurekaserver</artifactId>
-	<version>0.0.9</version>
+	<version>0.0.10</version>
 	<name>eurekaserver</name>
 	<description>Service Discovery agent for Bank microservices</description>
 

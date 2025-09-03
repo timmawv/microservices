@@ -12,7 +12,7 @@
 
 	<groupId>avlyakulov.timur</groupId>
 	<artifactId>gatewayserver</artifactId>
-	<version>0.0.9</version>
+	<version>0.0.10</version>
 	<name>gatewayserver</name>
 	<description>Edge server for bank microservices</description>
 

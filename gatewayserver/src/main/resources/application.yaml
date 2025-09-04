@@ -14,7 +14,7 @@ spring:
               lower-case-service-id: true
           httpclient:
             connect-timeout: 1000 # время на подключение к серверу, не получение ответа, а просто подключение
-            response-timeout: 3s # время на получение уже ответа
+            response-timeout: 10s # время на получение уже ответа
   data:
     redis:
       connect-timeout: 2s

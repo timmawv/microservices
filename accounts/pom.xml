@@ -12,7 +12,7 @@
 
 	<groupId>avlyakulov.timur</groupId>
 	<artifactId>accounts</artifactId>
-	<version>0.0.10</version>
+	<version>0.0.11</version>
 	<name>accounts</name>
 	<description>Microservice for Accounts</description>
 

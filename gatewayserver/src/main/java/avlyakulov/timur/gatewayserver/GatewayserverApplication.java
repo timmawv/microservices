@@ -54,8 +54,9 @@ public class GatewayserverApplication {
 						.path("/bank/cards/**")
 						.filters(filter -> filter.rewritePath("/bank/cards/(?<segment>.*)", "/${segment}")
 								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
-								.requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter()) //настройка rateLimiter
-										.setKeyResolver(userKeyResolver())))
+//								.requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter()) //настройка rateLimiter
+//										.setKeyResolver(userKeyResolver()))
+						)
 						.uri("lb://CARDS"))
 				.build();
 	}
@@ -68,10 +69,10 @@ public class GatewayserverApplication {
 				.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(4)).build()).build());
 	}
 
-	@Bean
-	public RedisRateLimiter redisRateLimiter() {
-		return new RedisRateLimiter(1, 1, 1);
-	}
+//	@Bean
+//	public RedisRateLimiter redisRateLimiter() {
+//		return new RedisRateLimiter(1, 1, 1);
+//	}
 
 	@Bean
 	KeyResolver userKeyResolver() {

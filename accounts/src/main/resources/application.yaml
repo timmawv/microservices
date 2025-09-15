@@ -57,6 +57,10 @@ management:
     username: "guest"
     password: "guest"
 
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
 eureka:
   instance:
     preferIpAddress: true

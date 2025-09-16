@@ -1,6 +1,6 @@
 services:
   read:
-    image: grafana/loki:latest
+    image: grafana/loki:3.1.2
     command: "-config.file=/etc/loki/config.yaml -target=read"
     ports:
       - 3101:3100
@@ -21,7 +21,7 @@ services:
           - loki
 
   write:
-    image: grafana/loki:latest
+    image: grafana/loki:3.1.2
     command: "-config.file=/etc/loki/config.yaml -target=write"
     ports:
       - 3102:3100
@@ -40,7 +40,7 @@ services:
       <<: *loki-dns
 
   alloy:
-    image: grafana/alloy:latest
+    image: grafana/alloy:v1.5.1
     volumes:
       - ./observability/alloy/alloy-local-config.yaml:/etc/alloy/config.alloy:ro
       - /var/run/docker.sock:/var/run/docker.sock
@@ -54,7 +54,7 @@ services:
       service: network-deploy-service
 
   minio:
-    image: minio/minio
+    image: minio/minio:RELEASE.2024-12-18T13-15-44Z
     entrypoint:
       - sh
       - -euc
@@ -80,8 +80,20 @@ services:
       file: common-config.yaml
       service: network-deploy-service
 
+  prometheus:
+    image: prom/prometheus:v3.1.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:11.4.0
     environment:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -92,22 +104,11 @@ services:
       - sh
       - -euc
       - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-          - name: Loki
-            type: loki
-            access: proxy
-            url: http://gateway:3100
-            jsonData:
-              httpHeaderName1: "X-Scope-OrgID"
-            secureJsonData:
-              httpHeaderValue1: "tenant1"
-        EOF
         /run.sh
     ports:
       - "3000:3000"
+    volumes:
+      - ./observability/grafana/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1" ]
       interval: 10s
@@ -118,7 +119,7 @@ services:
       service: network-deploy-service
 
   backend:
-    image: grafana/loki:latest
+    image: grafana/loki:3.1.2
     volumes:
       - ./observability/loki/loki-config.yaml:/etc/loki/config.yaml
     ports:
@@ -133,7 +134,7 @@ services:
 
 
   gateway:
-    image: nginx:latest
+    image: nginx:1.27.3
     depends_on:
       - read
       - write

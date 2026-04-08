@@ -88,7 +88,7 @@ services:
     volumes:
       - ./observability/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
     extends:
-      file: common-config.yml
+      file: common-config.yaml
       service: network-deploy-service
 
 

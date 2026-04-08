@@ -2,33 +2,22 @@ package avlyakulov.timur.accounts.controller;
 
 import avlyakulov.timur.accounts.dto.AccountContactInfoDto;
 import avlyakulov.timur.accounts.dto.CustomerDto;
-import avlyakulov.timur.accounts.dto.ErrorResponseDto;
 import avlyakulov.timur.accounts.dto.ResponseDto;
 import avlyakulov.timur.accounts.service.AccountServiceI;
 import avlyakulov.timur.accounts.util.AccountsConstants;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @RestController

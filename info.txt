@@ -1,1 +1,2 @@
 https://github.com/eazybytes/microservices/tree/3.4.1
+mvn compile jib:dockerBuild - to bild dockerFile

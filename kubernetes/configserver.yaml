@@ -18,7 +18,7 @@ spec:
         - name: configserver
           image: timmawv/configserver:0.0.12
           ports:
-            - containerPort: 8071
+            - containerPort: 8080
 --- #показывает что это 2 разных yaml файла они разделены между собой
 apiVersion: v1
 kind: Service
@@ -30,5 +30,5 @@ spec:
   type: LoadBalancer
   ports:
     - protocol: TCP
-      port: 8071
-      targetPort: 8071
+      port: 8080
+      targetPort: 8080
